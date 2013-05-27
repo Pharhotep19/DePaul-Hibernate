@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="edu.depaul.hibernate.domain.xml">
+
+  <class name="Employee" abstract="true">
+
+    <id name="id" type="long" column="ID">
+      <generator class="native"/>
+    </id>
+
+    <property name="name" column="name" type="string"/>
+
+    <joined-subclass name="ContractEmployee" table="CONTRACT_EMPLOYEES">
+       <key column="EMPLOYEE_ID"/>
+       <property name="dailyRate" column="RATE"/>
+    </joined-subclass>
+
+     <joined-subclass name="FullTimeEmployee" table="FULLTIME_EMPLOYEES">
+        <key column="EMPLOYEE_ID"/>
+        <property name="salary" column="SALARY"/>
+     </joined-subclass>
+
+     <joined-subclass name="PartTimeEmployee" table="PARTTIME_EMPLOYEES">
+        <key column="EMPLOYEE_ID"/>
+        <property name="hourlyRate" column="RATE"/>
+     </joined-subclass>
+
+  </class>
+</hibernate-mapping>

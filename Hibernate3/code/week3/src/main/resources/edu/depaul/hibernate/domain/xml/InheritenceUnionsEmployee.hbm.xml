@@ -1,0 +1,29 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="edu.depaul.hibernate.domain.xml">
+
+  <class name="Employee" abstract="true">
+
+    <id name="id" type="long" column="ID">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="name" column="name" type="string"/>
+
+    <union-subclass name="ContractEmployee" table="CONTRACT_EMPLOYEES">
+       <property name="dailyRate" column="RATE"/>
+    </union-subclass>
+
+    <union-subclass name="FullTimeEmployee" table="FULLTIME_EMPLOYEES">
+       <property name="vacation" column="VACATION"/>
+       <property name="salary" column="SALARY"/>
+    </union-subclass>
+
+    <union-subclass name="PartTimeEmployee" table="PARTTIME_EMPLOYEES">
+       <property name="vacation" column="VACATION"/>
+       <property name="hourlyRate" column="RATE"/>
+    </union-subclass>
+
+  </class>
+</hibernate-mapping>

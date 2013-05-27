@@ -19,7 +19,7 @@ import edu.depaul.hibernate.domain.xml.PartTimeEmployee;
 
 @ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class InheritenceUnionsTest {
+public class InheritenceJoinsTest {
 
 	@SuppressWarnings("serial")
 	private List<String> names = new ArrayList<String>(){{

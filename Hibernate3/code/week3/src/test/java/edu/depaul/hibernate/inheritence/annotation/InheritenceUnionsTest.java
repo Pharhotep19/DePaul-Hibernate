@@ -1,4 +1,4 @@
-package edu.depaul.hibernate.inheritence.xml;
+package edu.depaul.hibernate.inheritence.annotation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.depaul.hibernate.domain.xml.ContractEmployee;
-import edu.depaul.hibernate.domain.xml.FullTimeEmployee;
-import edu.depaul.hibernate.domain.xml.PartTimeEmployee;
+import edu.depaul.hibernate.domain.annotation.UnionContractEmployee;
+import edu.depaul.hibernate.domain.annotation.UnionFullTimeEmployee;
+import edu.depaul.hibernate.domain.annotation.UnionPartTimeEmployee;
 
 @ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,7 +46,7 @@ public class InheritenceUnionsTest {
 
 	private void savePartTimeEmployees(Session session) {
 
-		PartTimeEmployee employee = new PartTimeEmployee();
+		UnionPartTimeEmployee employee = new UnionPartTimeEmployee();
 
 		employee.setHourlyRate(randomGenerator.nextInt(20));
 		employee.setVacation(randomGenerator.nextInt(365));
@@ -63,7 +63,7 @@ public class InheritenceUnionsTest {
 	 *
 	 */
 	private void saveFullTimeEmployees(Session session) {
-		FullTimeEmployee employee = new FullTimeEmployee();
+		UnionFullTimeEmployee employee = new UnionFullTimeEmployee();
 
 		employee.setSalary(randomGenerator.nextInt());
 		employee.setVacation(randomGenerator.nextInt(365));
@@ -80,7 +80,7 @@ public class InheritenceUnionsTest {
 	 *
 	 */
 	private void saveContractEmployees(Session session) {
-		ContractEmployee employee = new ContractEmployee();
+		UnionContractEmployee employee = new UnionContractEmployee();
 
 		employee.setDailyRate(randomGenerator.nextDouble());
 		int index = randomGenerator.nextInt(names.size());
