@@ -1,0 +1,16 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="edu.depaul.hibernate.domain">
+  <class name="Order" table="customer_order">
+    <id name="id" type="long" column="id">
+      <generator class="native"/>
+    </id>
+    <property name="customerName" column="customer_name" type="string"/>
+
+	<set name="items" table="order_item">
+		<key column="order_id"/>
+		<many-to-many column="item_id" class="Item"/>
+	</set>
+  </class>
+</hibernate-mapping>

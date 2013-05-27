@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="edu.depaul.hibernate.domain">
+	<class name="Employee" abstract="true" table="EMPLOYEE">
+		<id name="id" type="long" column="ID">
+			<generator class="native" />
+		</id>
+		
+		<discriminator column="EMPLOYEE_TYPE" type="string" />
+		
+		<property name="name" column="name" type="string" />
+		
+		<subclass name="ContractEmployee" discriminator-value="CE">
+			<property name="dailyRate" column="RATE" />
+		</subclass>
+		
+		<subclass name="FullTimeEmployee" discriminator-value="FTE">
+			<property name="vacation" column="VACATION" />
+			<property name="salary" column="SALARY" />
+		</subclass>
+		
+		<subclass name="PartTimeEmployee" discriminator-value="PTE">
+			<property name="vacation" column="VACATION" />
+			<property name="hourlyRate" column="RATE" />
+		</subclass>
+	</class>
+</hibernate-mapping>
