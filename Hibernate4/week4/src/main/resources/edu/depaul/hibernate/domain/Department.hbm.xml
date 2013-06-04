@@ -1,0 +1,24 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.depaul.hibernate.domain">
+  <class name="Department" table="department"><!--
+
+    <cache usage="read-write" />
+
+    --><id name="id" type="long" column="id">
+      <generator class="native"/>
+    </id>
+
+    <version name="version"></version>
+
+    <property name="name" column="name" type="string"/>
+    <property name="number" column="number" type="string"/>
+
+	<set name="employees" cascade="all">
+      <key column="employee_id"/>
+      <one-to-many class="CompanyEmployee"/>
+    </set>
+  </class>
+</hibernate-mapping>

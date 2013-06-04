@@ -1,0 +1,58 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.depaul.hibernate.domain">
+
+  <class name="Employee" abstract="true" table="employee"><!--
+
+    <cache usage="read-write" />
+
+    --><id name="id" type="long" column="ID">
+      <generator class="native"/>
+    </id>
+
+    <discriminator column="employee_type" type="string"/>
+
+    <version name="version"></version>
+
+    <property name="name" column="name" type="string"/>
+    <property name="address" column="address" type="string"/>
+    <property name="city" column="city" type="string"/>
+    <property name="state" column="state" type="string"/>
+    <property name="zip" column="zip" type="string"/>
+	<property name="ssn" column="ssn" type="string"/>
+
+    <subclass name="ContractEmployee" discriminator-value="CE">
+       <property name="company" column="company" type="string"/>
+       <property name="dailyRate" column="rate" type="double"/>
+    </subclass>
+
+    <subclass name="CompanyEmployee" abstract="true">
+
+      <property name="vacation" column="VACATION" />
+	  <many-to-one name="department" column="department_id" cascade="all"/>
+
+      <subclass name="FullTimeEmployee" discriminator-value="FTE">
+         <property name="salary" column="SALARY"/>
+		<set name="dependents" table="employee_dependent" cascade="all">
+			<key column="employee_id"/>
+			<many-to-many column="dependent_id" class="Dependent"/>
+		</set>
+      </subclass>
+
+      <subclass name="PartTimeEmployee" discriminator-value="PTE">
+         <property name="hourlyRate" column="RATE"/>
+      </subclass>
+
+    </subclass>
+  </class>
+
+  <query name="maxPartTimeRate"><![CDATA[
+  	select max(hourlyRate) from PartTimeEmployee
+  ]]></query>
+
+  <sql-query name="minPartTimeRate">
+  	select min(RATE) from employee where employee_type = 'PTE'
+  </sql-query>
+</hibernate-mapping>
