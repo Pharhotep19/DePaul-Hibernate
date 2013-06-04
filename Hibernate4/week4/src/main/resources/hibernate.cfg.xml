@@ -17,12 +17,9 @@
         <!-- SQL dialect -->
 		<property name="dialect">org.hibernate.dialect.HSQLDialect</property>
 
-        <!-- Enable Hibernate's automatic session context management -->
-		<property name="current_session_context_class">thread</property>
-
         <!-- Disable the second-level cache  -->
-		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-
+<!--   		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+ --> 
         <!-- Echo all executed SQL to stdout -->
 		<property name="show_sql">true</property>
 
@@ -32,12 +29,13 @@
 		<!-- Format SQL for readability -->
 		<!--property name="format_sql">true</property-->
 
-		<!-- Caching configuration --><!--
-		<property name="hibernate.cache.use_second_level_cache">true</property>
-		<property name="hibernate.cache.use_query_cache">true</property>
-		<property name="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</property>
+		<!-- Caching configuration -->
+  		<property name="cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+		<property name="cache.use_second_level_cache">true</property>
+		<property name="cache.use_query_cache">true</property>
+ 		<property name="cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</property>
 
-		--><mapping resource="edu/depaul/hibernate/domain/Department.hbm.xml" />
+		<mapping resource="edu/depaul/hibernate/domain/Department.hbm.xml" />
 		<mapping resource="edu/depaul/hibernate/domain/Employee.hbm.xml" />
 		<mapping resource="edu/depaul/hibernate/domain/Dependent.hbm.xml" />
 	</session-factory>

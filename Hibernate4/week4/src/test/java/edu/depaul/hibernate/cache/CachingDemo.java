@@ -1,11 +1,12 @@
-package edu.depaul.hibernate.criteria;
+package edu.depaul.hibernate.cache;
 
-import java.util.List;
 import java.util.Random;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Subqueries;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,70 +23,39 @@ import edu.depaul.hibernate.domain.PartTimeEmployee;
 
 @ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class QueryDemo {
+public class CachingDemo {
+
+	@Autowired
+	public SessionFactory sessionFactory;
 
 	private final String [] firstNames = {"Michael", "Erica", "Sadie", "Joyce", "Terry", "Laura", "Preston"};
 	private final String [] lastNames = {"Minella", "Smith", "Jones", "Benes", "Neuberger"};
 	private final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private Random random = new Random();
 
-	@Autowired
-	public SessionFactory sessionFactory;
-
 	@Test
-	@Ignore
-	@Transactional
-	@SuppressWarnings("unchecked")
-	public void testHql() {
-		Session session = sessionFactory.getCurrentSession();
+	public void test() {
+		Session session = null;
 
-		List<Employee> employees = session.createQuery("from Employee").list();
-
-		for (Employee employee : employees) {
-			System.out.println(employee.getName());
+		for (int i = 0; i < 100; i++) {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			DetachedCriteria subQuery = DetachedCriteria.forClass(Employee.class).setProjection(Projections.max("id"));
+			Employee firstEmployee = (Employee) session
+					.createCriteria(Employee.class)
+					.add(Subqueries.propertyEq("id", subQuery))
+					.setCacheable(true)
+					.list()
+					.get(0);
+			System.out.println("firstEmployee's name and id are "
+					+ firstEmployee.getName() + " " + firstEmployee.getId());
+			session.getTransaction().commit();
+			session.close();
 		}
 	}
 
 	@Test
 	@Ignore
-	@Transactional
-	@SuppressWarnings("unchecked")
-	public void testCriteria() {
-		Session session = sessionFactory.getCurrentSession();
-
-		List<Employee> employees = session.createCriteria(Employee.class).add(Restrictions.like("name", "Michael%")).list();
-
-		for (Employee employee : employees) {
-			System.out.println(employee.getName());
-		}
-	}
-
-	@Test
-	@Ignore
-	@Transactional
-	@SuppressWarnings("unchecked")
-	public void testSql() {
-		Session session = sessionFactory.getCurrentSession();
-
-		List<Employee> employees = session.createSQLQuery("select * from employee").addEntity(Employee.class).list();
-
-		for (Employee employee : employees) {
-			System.out.println(employee.getName());
-		}
-	}
-
-	@Test
-	@Ignore
-	@Transactional
-	public void testNamedQueries() {
-		Session session = sessionFactory.getCurrentSession();
-
-		double rate = (Double) session.getNamedQuery("maxPartTimeRate").list().get(0);
-
-		System.out.println("Max rate = " + rate);
-	}
-
-	@Test
 	@Transactional
 	@Rollback(false)
 	public void populateLotsOfData() {
@@ -111,7 +81,7 @@ public class QueryDemo {
 				((PartTimeEmployee) employee).setVacation(String.valueOf(random.nextInt()));
 			}
 
-			employee.setName(firstNames[random.nextInt(firstNames.length)] + letters.charAt(random.nextInt(letters.length())) + lastNames[random.nextInt(lastNames.length)]);
+			employee.setName(firstNames[random.nextInt(firstNames.length)] + " " + letters.charAt(random.nextInt(letters.length())) + " " +  lastNames[random.nextInt(lastNames.length)]);
 
 			session.save(employee);
 		}

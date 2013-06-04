@@ -8,11 +8,24 @@
 
 	<import resource="classpath:base-hibernate-context.xml"/>
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
 		<property name="url" value="jdbc:hsqldb:hsql://localhost" />
 		<property name="username" value="sa" />
 		<property name="password" value="" />
+	</bean>
+ -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+	          destroy-method="close">
+	        <property name="driverClass" value="org.hsqldb.jdbcDriver" />
+	        <property name="jdbcUrl" value="jdbc:hsqldb:hsql://localhost" />
+	        <property name="user" value="sa" />
+	        <property name="password" value="" /> 
+	
+	        <!-- these are C3P0 properties -->
+	        <property name="minPoolSize" value="5" />
+	        <property name="maxPoolSize" value="10" />
+	        <property name="maxIdleTime" value="500" />
 	</bean>
 
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

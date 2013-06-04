@@ -4,11 +4,11 @@
 
 <hibernate-mapping package="edu.depaul.hibernate.domain">
 
-  <class name="Employee" abstract="true" table="employee"><!--
+  <class name="Employee" abstract="true" table="employee">
 
-    <cache usage="read-write" />
+     <cache usage="read-write" />
 
-    --><id name="id" type="long" column="ID">
+    <id name="id" type="long" column="ID">
       <generator class="native"/>
     </id>
 
